@@ -1,0 +1,30 @@
+Header set Access-Control-Allow-Origin "*"
+
+RewriteEngine on
+RewriteBase /
+# /1/2/3.json
+#RewriteRule ^([0-9]+)/([0-9]+)/([0-9]+).json$ / [L]
+
+#RewriteRule ^([0-9]+)/([0-9]+)/([0-9]+).json$ /?z=$1&y=$2&x=$3.json [L]
+
+#RewriteRule ^(tile|feature|bbox.json)/([0-9]+)/([0-9]+)/([0-9]+).json$ /?w=$1&z=$2&y=$3&x=$4.json [QSA,L]
+
+#RewriteRule ^(tile)/([0-9]+)/([0-9]+)/([0-9]+).json$ /?w=$1&z=$2&x=$3&y=$4.json [QSA,L]
+#RewriteRule ^(feature)/([0-9]+).json$ /?w=$1&$2.json [QSA,L]
+#RewriteRule ^(bbox.json)$ /?w=$1 [QSA,L]
+
+RewriteRule ^([A-Za-z0-9-]+)/(tile)/([0-9]+)/([0-9]+)/([0-9]+).json$ /?k=$1&w=$2&z=$3&x=$4&y=$5.json [QSA,L]
+RewriteRule ^([A-Za-z0-9-]+)/(feature)/([0-9]+).json$ /?w=$2&k=$1&$2.json [QSA,L]
+RewriteRule ^([A-Za-z0-9-]+)/(bbox.json)$ /w=$2&k=$1 [QSA,L]
+
+####################
+# GZIP COMPRESSION #
+####################
+SetOutputFilter DEFLATE
+AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/x-javascript application/x-httpd-php
+BrowserMatch ^Mozilla/4 gzip-only-text/html
+BrowserMatch ^Mozilla/4\.0[678] no-gzip
+BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+BrowserMatch \bMSI[E] !no-gzip !gzip-only-text/html
+SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip
+Header append Vary User-Agent env=!dont-vary
